@@ -1,0 +1,36 @@
+<idea-plugin version="2">
+  <id>com.txs.notification.plugin</id>
+  <name>IWillBeBack</name>
+  <version>1.1</version>
+  <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">HRS</vendor>
+
+  <description><![CDATA[
+  Plugin show status of Jenkins Jobs
+    ]]></description>
+
+  <change-notes><![CDATA[
+      Nothing to do here...
+    ]]>
+  </change-notes>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+  <idea-version since-build="141.0"/>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+       on how to target different products -->
+  <!-- uncomment to enable plugin in all products
+  <depends>com.intellij.modules.lang</depends>
+  -->
+  <application-components>
+    <!-- Add your application components here -->
+  </application-components>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <toolWindow id="IWillBeBackStatus" icon="/icon13.png" anchor="left" factoryClass="com.txs.notification.plugin.StatusArea"/>
+  </extensions>
+
+  <actions>
+    <!-- Add your actions here -->
+  </actions>
+
+</idea-plugin>
