@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+import java.util.Set;
+
 @RestController
 @RequestMapping(path = "api/configuration/", produces = "application/json")
 public class ConfigurationController {
@@ -31,6 +34,11 @@ public class ConfigurationController {
         service.addServer(url, jobList);
 
         return jobList;
+    }
+
+    @RequestMapping(value = "server/", method = RequestMethod.GET)
+    public Set<String> listServers() {
+        return service.getServers().keySet();
     }
 
     @RequestMapping(value = "job/register/", method = RequestMethod.POST)
