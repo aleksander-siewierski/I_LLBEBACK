@@ -15,7 +15,7 @@ public class ScheduledTask {
 
     public ScheduledTask(@Autowired BuildStatusUpdater updater) {
         this.updater = updater;
-//        updater.registerProject("txs-build-frontend");
+        updater.registerProject("Core_Folder/job/jenkins_lts");
     }
 
     @Scheduled(fixedRate = 5000)
