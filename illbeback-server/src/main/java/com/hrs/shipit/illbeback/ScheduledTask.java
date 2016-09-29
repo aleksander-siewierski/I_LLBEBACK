@@ -1,6 +1,6 @@
 package com.hrs.shipit.illbeback;
 
-import com.hrs.shipit.illbeback.parser.ProjectStatusUpdater;
+import com.hrs.shipit.illbeback.updater.BuildStatusUpdater;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +11,9 @@ import org.springframework.stereotype.Component;
 public class ScheduledTask {
 
     private static final Logger log = LoggerFactory.getLogger(ScheduledTask.class);
-    private ProjectStatusUpdater updater;
+    private BuildStatusUpdater updater;
 
-    public ScheduledTask(@Autowired ProjectStatusUpdater updater) {
+    public ScheduledTask(@Autowired BuildStatusUpdater updater) {
         this.updater = updater;
 //        updater.registerProject("txs-build-frontend");
     }
