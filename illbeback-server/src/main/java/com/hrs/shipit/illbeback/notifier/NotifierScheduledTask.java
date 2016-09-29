@@ -1,4 +1,4 @@
-package com.hrs.shipit.illbeback;
+package com.hrs.shipit.illbeback.notifier;
 
 import com.hrs.shipit.illbeback.model.JobStatus;
 import com.hrs.shipit.illbeback.updater.BuildStatusUpdater;
@@ -12,15 +12,15 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class ScheduledTask {
+public class NotifierScheduledTask {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ScheduledTask.class);
+    private static final Logger LOG = LoggerFactory.getLogger(NotifierScheduledTask.class);
 
     private BuildStatusUpdater updater;
 
     @Autowired private SimpMessagingTemplate template;
 
-    public ScheduledTask(@Autowired BuildStatusUpdater updater) {
+    public NotifierScheduledTask(@Autowired BuildStatusUpdater updater) {
         this.updater = updater;
     }
 
