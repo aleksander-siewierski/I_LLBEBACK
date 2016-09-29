@@ -1,4 +1,4 @@
-package com.hrs.shipit.illbeback;
+package com.hrs.shipit.illbeback.notifier;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
