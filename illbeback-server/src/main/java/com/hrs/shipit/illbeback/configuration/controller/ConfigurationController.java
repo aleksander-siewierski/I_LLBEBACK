@@ -18,6 +18,9 @@ public class ConfigurationController {
 
     @RequestMapping(value = "server/add/", method = RequestMethod.POST)
     public JobList addServer(@RequestParam("url") String url) {
-        return parser.parseJobList(url);
+        JobList jobList = parser.parseJobList(url);
+        service.addServer(url, jobList);
+
+        return jobList;
     }
 }
