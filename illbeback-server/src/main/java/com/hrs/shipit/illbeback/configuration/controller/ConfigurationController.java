@@ -63,4 +63,10 @@ public class ConfigurationController {
 
         return new ResponseEntity<>("{\"error\": \"Job is not registered\"}", HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @RequestMapping(value = "job/", method = RequestMethod.GET)
+    public List<String> listJobs() {
+        return service.getRegisteredJobs();
+    }
+
 }
