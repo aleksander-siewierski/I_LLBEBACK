@@ -1,6 +1,6 @@
 package com.hrs.shipit.illbeback;
 
-import com.hrs.shipit.illbeback.model.ProjectStatus;
+import com.hrs.shipit.illbeback.model.JobStatus;
 import com.hrs.shipit.illbeback.updater.BuildStatusUpdater;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,18 +18,15 @@ public class ScheduledTask {
 
     private BuildStatusUpdater updater;
 
-    @Autowired
-    private SimpMessagingTemplate template;
-
+    @Autowired private SimpMessagingTemplate template;
 
     public ScheduledTask(@Autowired BuildStatusUpdater updater) {
         this.updater = updater;
-        updater.registerProject("Core_Folder/job/jenkins_lts");
     }
 
     @Scheduled(fixedRate = 5000)
     public void fireCommunication() {
-        List<ProjectStatus> projectStatuses = updater.updateStatuses();
+        List<JobStatus> projectStatuses = updater.updateStatuses();
 
         System.out.println("Sending: " + projectStatuses.toString());
 

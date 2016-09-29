@@ -1,13 +1,13 @@
 package com.hrs.shipit.illbeback.model;
 
-public class ProjectStatus {
+public class JobStatus {
     private String projectName;
     private int completion;
     private int estimatedDuration;
     private int duration;
     private boolean isBuilding;
 
-    public ProjectStatus(String projectName, int completion, int estimatedDuration, int duration, boolean isBuilding) {
+    public JobStatus(String projectName, int completion, int estimatedDuration, int duration, boolean isBuilding) {
         this.projectName = projectName;
         this.completion = completion;
         this.estimatedDuration = estimatedDuration;
