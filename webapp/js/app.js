@@ -8,6 +8,8 @@ app.controller('MainController', function MainController($scope, $http){
     $scope.jobs = [];
     runNotification();
     connect();
+    var lastStatuses = {};
+    $scope.currentJobs = [];
 
     $scope.addMachine = function(){
         $http({
@@ -16,10 +18,12 @@ app.controller('MainController', function MainController($scope, $http){
             data: $.param({url: $scope.url}),
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function successCallback(response) {
-            
+            $scope.url = "";
             $scope.jobs = response.data.jobs; 
-            console.log(response.data.jobs)   
-        });
+        }, function errorCallback(response) {
+            alert("Incorrect url format");
+            $scope.url = "";
+      });
     }
 
     $scope.addThisJob = function(jobUrl){
@@ -30,9 +34,34 @@ app.controller('MainController', function MainController($scope, $http){
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function successCallback(response) {
             console.log(response)   
+        }, function errorCallback(response) {
+            if (response.data.hasOwnProperty("error")){
+                alert(response.data.error);
+            }else{
+                alert("Unknown error occurd");
+            }
         });
     }
-    // $( "#disconnect" ).click(function() { disconnect(); });
+
+    $scope.removeThisJob = function(jobUrl){
+        if (confirm("Are You sure to want to remove this job? "+jobUrl)){
+            $http({
+            method: 'POST',
+            url: domain+"/api/configuration/job/remove/",
+            data: $.param({url: jobUrl}),
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+          }).then(function successCallback(response) {
+             alert("Job has benn removed")
+          }, function errorCallback(response) {
+            alert("Unknown error occurd");
+          });
+        } 
+    }
+
+    $scope.clearJobsList = function(){
+        $scope.jobs = [];
+    }
+
 
     function runNotification(){
            // At first, let's check if we have permission for notification
@@ -86,15 +115,15 @@ app.controller('MainController', function MainController($scope, $http){
       }
 
     function setConnected(connected) {
-        $("#connect").prop("disabled", connected);
-        $("#disconnect").prop("disabled", !connected);
-        if (connected) {
-            $("#conversation").show();
-        }
-        else {
-            $("#conversation").hide();
-        }
-        $("#greetings").html("");
+        // $("#connect").prop("disabled", connected);
+        // $("#disconnect").prop("disabled", !connected);
+        // if (connected) {
+        //     $("#conversation").show();
+        // }
+        // else {
+        //     $("#conversation").hide();
+        // }
+        // $("#greetings").html("");
     }
 
     function connect() {
@@ -123,7 +152,29 @@ app.controller('MainController', function MainController($scope, $http){
     }
 
     function showGreeting(message) {
-        $("#greetings").append("<tr><td>" + message + "</td></tr>");
-        var n = new Notification("powiadomienie", {tag: 'soManyNotification'});
-    }  
+        // $("#greetings").append("<tr><td>" + message + "</td></tr>");
+        console.log("Number of jobs: "+message.length)
+
+        // find changes
+        for (var i = 0; i<message.length; i++){
+            if (!lastStatuses.hasOwnProperty(message[i].projectName) || message[i].building != lastStatuses[message[i].projectName]){
+                lastStatuses[message[i].projectName] = message[i].building;
+                if (message[i].building === true){
+                    var n = new Notification("New build started of "+message[i].projectName, {tag: 'soManyNotification'});
+                    alert("New build started of "+message[i].projectName);
+                }
+            }
+            console.log(message[i].projectName+" ("+message[i].building+")");
+        } 
+
+        //update list in memory
+        lastStatuses = [];
+        $scope.currentJobs = [];
+        for (var i = 0; i<message.length; i++){
+            lastStatuses[message[i].projectName] = message[i].building;
+            $scope.currentJobs.push(message[i].projectName);
+        } 
+        // $scope.myJobs = lastStatuses;
+    }
+     
 });

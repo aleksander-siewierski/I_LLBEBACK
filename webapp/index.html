@@ -19,7 +19,7 @@
                 <div class="col-md-6">
                     <form class="form-inline" ng-submit="sendMessage();">
                         <div class="form-group">
-                            <label for="connect">WebSocket connection: {{ 9+3 }}</label>
+                            <label for="connect">Job manager "I will be back!"</label>
                             <!-- <button id="connect" class="btn btn-default" type="submit">Connect</button> -->
                             <!-- <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect -->
                             </button>
@@ -36,25 +36,22 @@
                     </form>
                 </div>
             </div>
+
             <div class="row">
-            <h2>Jobs</h2>
-                <ul class="table table-striped">
-                    <li ng-repeat="job in jobs"><input type="button" value="add this" ng-click="addThisJob(job.url)" /> {{ job.name }}</li>
+                <h3>Your registered jobs:</h3>
+                <ul class="">
+                    <li ng-repeat="cjob in currentJobs"><input type="button" value="remove" ng-click="removeThisJob(cjob)" /> {{ cjob }}</li>
                 </ul>
             </div>
+
             <div class="row">
-                <div class="col-md-12">
-                    <table id="conversation" class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th>Greetings</th>
-                        </tr>
-                        </thead>
-                        <tbody id="greetings">
-                        </tbody>
-                    </table>
-                </div>
+            <h2>Jobs</h2>
+                <a href="javascript:" ng-click="clearJobsList()">Clear list</a>
+                <ul class="table table-striped">
+                    <li ng-repeat="job in jobs"><input type="button" value="add job" ng-click="addThisJob(job.url)" /> {{ job.name }}</li>
+                </ul>
             </div>
+            
         </form>
         </div>   
         <script src="/js/jquery.min.js" type="text/javascript"></script>
