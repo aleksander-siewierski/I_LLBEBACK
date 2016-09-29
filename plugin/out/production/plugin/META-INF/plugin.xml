@@ -26,7 +26,7 @@
   </application-components>
 
   <extensions defaultExtensionNs="com.intellij">
-    <toolWindow id="IWillBeBackStatus" icon="/icon13.png" anchor="left" factoryClass="com.txs.notification.plugin.StatusArea"/>
+    <toolWindow id="I Will Be Back" icon="/icon13.png" anchor="right" factoryClass="com.txs.notification.plugin.StatusArea"/>
   </extensions>
 
   <actions>
