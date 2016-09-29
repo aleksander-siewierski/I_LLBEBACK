@@ -28,4 +28,13 @@ public class Job {
     public void setColor(String color) {
         this.color = color;
     }
+
+    @Override
+    public String toString() {
+        return "Job{" +
+                "name='" + name + '\'' +
+                ", url='" + url + '\'' +
+                ", color='" + color + '\'' +
+                '}';
+    }
 }

@@ -4,6 +4,7 @@ public class BuildStatus {
     private boolean building;
     private int duration;
     private int estimatedDuration;
+    private long timestamp;
 
     public boolean isBuilding() {
         return building;
@@ -27,5 +28,13 @@ public class BuildStatus {
 
     public void setEstimatedDuration(int estimatedDuration) {
         this.estimatedDuration = estimatedDuration;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 }
