@@ -11,6 +11,7 @@ public class JobStatus {
         this.projectName = projectName;
         this.completion = completion;
         this.estimatedDuration = estimatedDuration;
+        this.duration = duration;
         this.isBuilding = isBuilding;
     }
 
