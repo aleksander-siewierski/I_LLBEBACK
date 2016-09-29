@@ -173,6 +173,7 @@ app.controller('MainController', function MainController($scope, $http){
         for (var i = 0; i<message.length; i++){
             lastStatuses[message[i].projectName] = message[i].building;
             $scope.currentJobs.push(message[i].projectName);
+            $scope.$apply();
         } 
         // $scope.myJobs = lastStatuses;
     }
