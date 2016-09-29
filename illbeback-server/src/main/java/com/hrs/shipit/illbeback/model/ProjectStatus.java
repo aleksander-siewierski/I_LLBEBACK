@@ -18,4 +18,24 @@ public class ProjectStatus {
     public String toString() {
         return "ProjectStatus{" + "projectName='" + projectName + '\'' + ", completion=" + completion + ", estimatedDuration=" + estimatedDuration + ", duration=" + duration + ", isBuilding=" + isBuilding + '}';
     }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public int getCompletion() {
+        return completion;
+    }
+
+    public int getEstimatedDuration() {
+        return estimatedDuration;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public boolean isBuilding() {
+        return isBuilding;
+    }
 }
