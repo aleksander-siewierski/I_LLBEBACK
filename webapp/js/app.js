@@ -1,23 +1,38 @@
 var app = angular.module('app', []);
-var domain = "http://10.144.66.166:8080"
+// var domain = "http://10.144.66.166:8080"
+var domain = "http://172.16.40.147:8080"
 var stompClient = null;
 
 app.controller('MainController', function MainController($scope, $http){
 
+    $scope.jobs = [];
     runNotification();
     connect();
 
     $scope.addMachine = function(){
         $http({
             method: 'POST',
-            url: domain+"/api/configuration/server/add",
+            url: domain+"/api/configuration/server/add/",
             data: $.param({url: $scope.url}),
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function successCallback(response) {
-
+            
+            $scope.jobs = response.data.jobs; 
+            console.log(response.data.jobs)   
         });
     }
-    $( "#disconnect" ).click(function() { disconnect(); });
+
+    $scope.addThisJob = function(jobUrl){
+        $http({
+            method: 'POST',
+            url: domain+"/api/configuration/job/register/",
+            data: $.param({url: jobUrl}),
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        }).then(function successCallback(response) {
+            console.log(response)   
+        });
+    }
+    // $( "#disconnect" ).click(function() { disconnect(); });
 
     function runNotification(){
            // At first, let's check if we have permission for notification
@@ -39,7 +54,7 @@ app.controller('MainController', function MainController($scope, $http){
             
             // Using an interval cause some browsers (including Firefox) are blocking notifications if there are too much in a certain time.
               // Thanks to the tag, we should only see the "Hi! 9" notification 
-              var n = new Notification("Hi! ", {tag: 'soManyNotification'});
+              // var n = new Notification("Hi! ", {tag: 'soManyNotification'});
           }
 
           // If the user hasn't told if he wants to be notified or not
@@ -52,7 +67,7 @@ app.controller('MainController', function MainController($scope, $http){
                 
                 // Using an interval cause some browsers (including Firefox) are blocking notifications if there are too much in a certain time.
                   // Thanks to the tag, we should only see the "Hi! 9" notification 
-                  var n = new Notification("Hi! ", {tag: 'soManyNotification'});  
+                  // var n = new Notification("Hi! ", {tag: 'soManyNotification'});  
               }
 
               // Otherwise, we can fallback to a regular modal alert
