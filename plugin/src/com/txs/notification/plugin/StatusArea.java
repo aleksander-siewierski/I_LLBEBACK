@@ -7,9 +7,11 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
+import com.txs.notification.plugin.action.jobScheduleRunnableAction;
 import com.txs.notification.plugin.action.clearButtonAction;
 import com.txs.notification.plugin.action.setUrlButtonAction;
 import com.txs.notification.plugin.model.ListEntry;
+import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -36,7 +38,7 @@ public class StatusArea implements ToolWindowFactory {
         setUrlButton.addActionListener(new setUrlButtonAction(urlValue, pluginToolWindowContent));
         clearButton.addActionListener(new clearButtonAction(urlValue, pluginToolWindowContent));
 
-        ApplicationManager.getApplication().executeOnPooledThread(new InstallRunnable(listModel));
+        ApplicationManager.getApplication().executeOnPooledThread(new jobScheduleRunnableAction(listModel));
 
     }
 
@@ -52,17 +54,3 @@ public class StatusArea implements ToolWindowFactory {
 
 }
 
-class InstallRunnable implements Runnable {
-    private DefaultListModel listModel;
-
-    public InstallRunnable(DefaultListModel listModel) {
-        this.listModel = listModel;
-    }
-
-    @Override
-    public void run() {
-        NotificationWrapper vo = new NotificationWrapper();
-        vo.info("Runnable job test!");
-
-    }
-}

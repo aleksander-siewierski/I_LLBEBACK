@@ -17,19 +17,19 @@ public class NotificationWrapper {
                     NotificationDisplayType.BALLOON, true);
 
 
-    void error(String message){
+    public void error(String message){
         notify(message, NotificationType.ERROR);
     }
 
-    void info(String message){
+    public void info(String message){
         notify(message, NotificationType.INFORMATION);
     }
 
-    void warning(String message){
+    public void warning(String message){
         notify(message, NotificationType.WARNING);
     }
 
-    void notify(String message, NotificationType type) {
+    public void notify(String message, NotificationType type) {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override
             public void run() {
