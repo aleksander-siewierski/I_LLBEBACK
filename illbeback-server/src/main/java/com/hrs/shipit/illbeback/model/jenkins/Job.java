@@ -4,6 +4,15 @@ public class Job {
     private String name;
     private String url;
     private String color;
+    private Server server;
+
+    public void setServer(Server server) {
+        this.server = server;
+    }
+
+    public Server getServer() {
+        return server;
+    }
 
     public String getName() {
         return name;

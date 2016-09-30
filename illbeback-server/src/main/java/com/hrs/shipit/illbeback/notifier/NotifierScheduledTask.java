@@ -3,8 +3,8 @@ package com.hrs.shipit.illbeback.notifier;
 import com.hrs.shipit.illbeback.configuration.service.ConfigurationService;
 import com.hrs.shipit.illbeback.model.JobStatus;
 import com.hrs.shipit.illbeback.model.jenkins.Job;
-import com.hrs.shipit.illbeback.model.jenkins.JobList;
-import com.hrs.shipit.illbeback.parser.JobListParser;
+import com.hrs.shipit.illbeback.model.jenkins.Server;
+import com.hrs.shipit.illbeback.parser.ServerParser;
 import com.hrs.shipit.illbeback.updater.BuildStatusUpdater;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,12 +19,9 @@ import java.util.List;
 @Component
 public class NotifierScheduledTask {
 
-    private static final Logger LOG = LoggerFactory.getLogger(NotifierScheduledTask.class);
-
     private BuildStatusUpdater updater;
 
-    @Autowired
-    JobListParser jobListParser;
+    @Autowired ServerParser serverParser;
 
     @Autowired
     ConfigurationService configurationService;
@@ -68,10 +65,10 @@ public class NotifierScheduledTask {
         job.setColor("green");
         jobs.add(job);
 
-        JobList jobList = new JobList();
-        jobList.setJobs(jobs);
+        Server server = new Server();
+        server.setJobs(jobs);
 
-        configurationService.addServer(detpuw1, jobList);
+        configurationService.addServer(detpuw1, server);
         configurationService.registerJob(jobUrl);
         configurationService.registerJob(secondJobUrl);
 
@@ -90,10 +87,10 @@ public class NotifierScheduledTask {
         job.setColor("green");
         jobs.add(job);
 
-        jobList = new JobList();
-        jobList.setJobs(jobs);
+        server = new Server();
+        server.setJobs(jobs);
 
-        configurationService.addServer(detpuw2, jobList);
+        configurationService.addServer(detpuw2, server);
         configurationService.registerJob(jobUrl);
         configurationService.registerJob(secondJobUrl);
 

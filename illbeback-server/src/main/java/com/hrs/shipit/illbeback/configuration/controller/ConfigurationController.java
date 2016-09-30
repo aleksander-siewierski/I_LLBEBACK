@@ -2,53 +2,44 @@ package com.hrs.shipit.illbeback.configuration.controller;
 
 import com.hrs.shipit.illbeback.configuration.service.ConfigurationService;
 import com.hrs.shipit.illbeback.model.JobStatus;
-import com.hrs.shipit.illbeback.model.jenkins.JobList;
-import com.hrs.shipit.illbeback.notifier.NotifierScheduledTask;
-import com.hrs.shipit.illbeback.parser.BuildStatusParser;
-import com.hrs.shipit.illbeback.parser.JobListParser;
+import com.hrs.shipit.illbeback.model.jenkins.Job;
+import com.hrs.shipit.illbeback.model.jenkins.Server;
+import com.hrs.shipit.illbeback.parser.ServerParser;
 import com.hrs.shipit.illbeback.updater.BuildStatusUpdater;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.SocketUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
-
-import static javafx.scene.input.KeyCode.X;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "api/configuration/", produces = "application/json")
 public class ConfigurationController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ConfigurationController.class);
-
     @Autowired
     private ConfigurationService service;
 
     @Autowired
-    private JobListParser jobListParser;
-
-    @Autowired
-    private BuildStatusParser buildStatusParser;
+    private ServerParser serverParser;
 
     @Autowired
     private BuildStatusUpdater buildStatusUpdater;
 
     @RequestMapping(value = "server/add/", method = RequestMethod.POST)
-    public JobList addServer(@RequestParam("url") String url) {
-        JobList jobList = jobListParser.parseJobList(url);
-        service.addServer(url, jobList);
+    public Server addServer(@RequestParam("url") String url) {
+        Server server = serverParser.parseServerInfo(url);
+        service.addServer(url, server);
 
-        return jobList;
+        return server;
     }
 
     @RequestMapping(value = "server/", method = RequestMethod.GET)
@@ -58,10 +49,10 @@ public class ConfigurationController {
 
     @RequestMapping(value = "job/register/", method = RequestMethod.POST)
     public ResponseEntity<String> registerJob(@RequestParam("url") String url) {
-        if (!service.getRegisteredJobs().contains(url)) {
+        Optional<Job> optional = service.findJobByJobUrl(url);
 
-            buildStatusParser.parseBuildStatusForJob(url);
-            service.registerJob(url);
+        if (optional.isPresent() && !service.containsJob(optional.get())) {
+            service.registerJob(optional.get());
 
             return new ResponseEntity<>(HttpStatus.OK);
         }
@@ -71,8 +62,10 @@ public class ConfigurationController {
 
     @RequestMapping(value = "job/remove/", method = RequestMethod.POST)
     public ResponseEntity<String> removeJob(@RequestParam("url") String url) {
-        if (service.getRegisteredJobs().contains(url)) {
-            service.removeJob(url);
+        Optional<Job> optional = service.findJobByJobUrl(url);
+
+        if (optional.isPresent() && service.containsJob(optional.get())) {
+            service.removeJob(optional.get());
 
             return new ResponseEntity<>(HttpStatus.OK);
         }
@@ -82,40 +75,15 @@ public class ConfigurationController {
 
     @RequestMapping(value = "job/", method = RequestMethod.GET)
     public List<String> listJobs() {
-        return service.getRegisteredJobs();
+        return service
+            .getRegisteredJobs()
+            .stream()
+            .map(Job::getUrl)
+            .collect(Collectors.toList());
     }
 
     @RequestMapping(value = "all/", method = RequestMethod.GET)
     public List<JobStatus> getAllJobsOnAllServers() {
-        List<JobStatus> jobStatuses = buildStatusUpdater.updateStatuses();
-
-        performUglyHacksThatDataIsPresentedBetter(jobStatuses);
-
-        System.out.println("Result for all: " + jobStatuses);
-        return jobStatuses;
+        return buildStatusUpdater.updateStatuses();
     }
-
-    private void performUglyHacksThatDataIsPresentedBetter(List<JobStatus> jobStatuses) {
-
-        for (JobStatus jobStatus : jobStatuses) {
-            String jobUrl = jobStatus.getJobName();
-
-            try {
-                String serverUrl = jobUrl.substring(0, jobUrl.indexOf("/", "http://".length() + 1)) + "/"; // ugly hacking
-                jobStatus.setServerName(serverUrl);
-
-                URL aURL = new URL(jobUrl);
-                String path = aURL.getPath();
-                String[] pathArray = path.split("/");
-                String shortJobName = pathArray[2];
-
-                jobStatus.setShortJobName(shortJobName);
-            } catch (MalformedURLException ex) {
-                LOG.error("MalformedURLException: " + jobUrl, ex);
-            } catch (Throwable t) {
-                LOG.error("Throwable!: ", t);
-            }
-        }
-    }
-
 }
