@@ -17,7 +17,7 @@ public class BuildStatusParser {
         BuildStatus status = restTemplate.getForObject(job
             .getUrl() + "/lastBuild/api/json?tree=duration,estimatedDuration,building,timestamp", BuildStatus.class);
 
-        return new JobStatus(job.getUrl(), job.getName(), status.getDuration() / status.getEstimatedDuration(), status
+        return new JobStatus(job.getName(), job.getUrl(), status.getDuration() / status.getEstimatedDuration(), status
             .getEstimatedDuration(), status.getDuration(), status.isBuilding(), status.getTimestamp());
     }
 }
