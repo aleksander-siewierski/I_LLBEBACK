@@ -2,6 +2,7 @@ package com.txs.notification.plugin.action;
 
 import com.google.gson.Gson;
 import com.intellij.ide.util.PropertiesComponent;
+import com.intellij.util.containers.HashMap;
 import com.txs.notification.plugin.NotificationWrapper;
 import com.txs.notification.plugin.model.ListEntry;
 
@@ -21,9 +22,11 @@ public class updateJobListAction extends TimerTask{
     NotificationWrapper noti;
     private DefaultListModel listModel;
     private Gson json;
+    private HashMap<String, Boolean> statusMap;
 
-    public updateJobListAction(DefaultListModel listModel) {
+    public updateJobListAction(DefaultListModel listModel, HashMap<String, Boolean> statusMap) {
         this.listModel = listModel;
+        this.statusMap = statusMap;
         noti = new NotificationWrapper();
         json = new Gson();
     }
@@ -39,9 +42,28 @@ public class updateJobListAction extends TimerTask{
 
             String content = getUrlAsString(url+"/api/configuration/all/");
             ListEntry[] myList = (ListEntry[]) json.fromJson(content, ListEntry[].class);
-            listModel.removeAllElements();
+            if (myList.length > 0){
+                listModel.removeAllElements();
+            }
             for(int i = 0; i < myList.length; i++){
                 listModel.add(i, myList[i]);
+                if (myList[i].getId() == null){
+                    continue;
+                }
+                if(statusMap.get(myList[i].getId()) == null){
+                    statusMap.put(myList[i].getId(), myList[i].isBuilding());
+                    continue;
+                }
+                if(statusMap.get(myList[i].getId()).equals(myList[i].isBuilding())){
+                    continue;
+                }
+                String notificationText = "Job <b>"+myList[i].getShortJobName()+"</b> on server "+myList[i].getServerName();
+                if(myList[i].isBuilding()){
+                    noti.info(notificationText+" <font color='blue'><b>started!</b></font>");
+                } else {
+                    noti.info(notificationText+" <font color='red'><b>finished!</b></font>");
+                }
+                statusMap.put(myList[i].getId(), myList[i].isBuilding());
             }
             
 

@@ -7,6 +7,7 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
+import com.intellij.util.containers.HashMap;
 import com.txs.notification.plugin.action.jobScheduleRunnableAction;
 import com.txs.notification.plugin.action.clearButtonAction;
 import com.txs.notification.plugin.action.setUrlButtonAction;
@@ -27,8 +28,10 @@ public class StatusArea implements ToolWindowFactory {
     private JButton clearButton;
     private ToolWindow pluginToolWindow;
     private DefaultListModel listModel;
+    private HashMap<String, Boolean> statusMap;
 
     public StatusArea() {
+        statusMap = new HashMap<String, Boolean>();
         jobList.clearSelection();
         listModel = new DefaultListModel< ListEntry>();
         jobList.setModel(listModel);
@@ -38,7 +41,7 @@ public class StatusArea implements ToolWindowFactory {
         setUrlButton.addActionListener(new setUrlButtonAction(urlValue, pluginToolWindowContent));
         clearButton.addActionListener(new clearButtonAction(urlValue, pluginToolWindowContent));
 
-        ApplicationManager.getApplication().executeOnPooledThread(new jobScheduleRunnableAction(listModel));
+        ApplicationManager.getApplication().executeOnPooledThread(new jobScheduleRunnableAction(listModel, statusMap));
 
     }
 
