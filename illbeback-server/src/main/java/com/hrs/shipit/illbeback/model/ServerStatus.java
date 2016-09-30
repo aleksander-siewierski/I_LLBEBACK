@@ -15,6 +15,8 @@ public class ServerStatus {
         this.serverUrl = serverUrl;
     }
 
+    private ServerStatus() { }
+
     public List<Job> getJobs() {
         return jobs;
     }
@@ -29,5 +31,9 @@ public class ServerStatus {
 
     public void setServerUrl(String serverUrl) {
         this.serverUrl = serverUrl;
+    }
+
+    public static ServerStatus empty() {
+        return new ServerStatus();
     }
 }

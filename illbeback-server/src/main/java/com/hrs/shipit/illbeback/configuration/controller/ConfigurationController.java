@@ -40,6 +40,15 @@ public class ConfigurationController {
         return server;
     }
 
+    @RequestMapping(value = "server/show/", method = RequestMethod.POST)
+    public ResponseEntity<ServerStatus> showServer(@RequestParam("url") String url) {
+        if (service.getServers().containsKey(url)) {
+            return ResponseEntity.ok(service.getServers().get(url));
+        }
+
+        return new ResponseEntity<>(ServerStatus.empty(), HttpStatus.NOT_FOUND);
+    }
+
     @RequestMapping(value = "server/", method = RequestMethod.GET)
     public Set<String> listServers() {
         return service.getServers().keySet();
