@@ -12,6 +12,10 @@ public class ServerParser {
     private static final String PARAMETERS = "/api/json?pretty=true&tree=jobs[name,url,color]";
 
     public Server parseServerInfo(String server) {
-        return restTemplate.getForObject(server + PARAMETERS, Server.class);
+        Server serverObject = restTemplate.getForObject(server + PARAMETERS, Server.class);
+
+        serverObject.setServerUrl(server);
+
+        return serverObject;
     }
 }

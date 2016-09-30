@@ -1,10 +1,12 @@
 package com.hrs.shipit.illbeback.model.jenkins;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class Job {
     private String name;
     private String url;
     private String color;
-    private Server server;
+    @JsonIgnore private Server server;
 
     public void setServer(Server server) {
         this.server = server;

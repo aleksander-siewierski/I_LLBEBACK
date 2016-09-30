@@ -51,12 +51,15 @@ public class NotifierScheduledTask {
     private void initFakeData() {
         String detpuw1 = "http://detpuw1-jenkins-update-971.data.det:8081/";
 
+        Server server = new Server();
+        server.setServerUrl(detpuw1);
         List<Job> jobs = new ArrayList<>(2);
         Job job = new Job();
         job.setName("txs-build-frontend");
         String jobUrl = "http://detpuw1-jenkins-update-971.data.det:8081/job/txs-build-frontend/";
         job.setUrl(jobUrl);
         job.setColor("green");
+        job.setServer(server);
         jobs.add(job);
 
         job.setName("build-webportal-build");
@@ -64,17 +67,20 @@ public class NotifierScheduledTask {
         job.setUrl(secondJobUrl);
         job.setColor("green");
         jobs.add(job);
+        job.setServer(server);
 
-        Server server = new Server();
         server.setJobs(jobs);
 
         configurationService.addServer(detpuw1, server);
         configurationService.registerJob(jobUrl);
         configurationService.registerJob(secondJobUrl);
+        server = new Server();
 
         String detpuw2 = "http://detpuw2-jenkins-update-971.data.det:8081/";
+        server.setServerUrl(detpuw2);
         jobs = new ArrayList<>(2);
         job = new Job();
+        job.setServer(server);
         job.setName("txs-build-frontend");
         jobUrl = "http://detpuw2-jenkins-update-971.data.det:8081/job/txs-build-frontend/";
         job.setUrl(jobUrl);
@@ -86,8 +92,8 @@ public class NotifierScheduledTask {
         job.setUrl(secondJobUrl);
         job.setColor("green");
         jobs.add(job);
+        job.setServer(server);
 
-        server = new Server();
         server.setJobs(jobs);
 
         configurationService.addServer(detpuw2, server);

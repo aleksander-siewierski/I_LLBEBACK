@@ -11,9 +11,10 @@ public class JobStatus {
     private long timestamp;
 
 
-    public JobStatus(String jobName, String serverName, int completion, int estimatedDuration, int duration, boolean isBuilding, long timestamp) {
+    public JobStatus(String jobName, String shortJobName, String serverName, int completion, int estimatedDuration, int duration, boolean isBuilding, long timestamp) {
         this(jobName, completion, estimatedDuration, duration, isBuilding, timestamp);
         this.serverName = serverName;
+        this.setShortJobName(shortJobName);
     }
 
     public JobStatus(String jobName, int completion, int estimatedDuration, int duration, boolean isBuilding, long timestamp) {
