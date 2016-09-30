@@ -28,7 +28,9 @@ public class ListEntry {
 
     public String getServerName() {
         String name = serverName;
-        name = name.substring(0, serverName.lastIndexOf(":"));
+        if (serverName.lastIndexOf(":") > 0){
+            name = name.substring(0, serverName.lastIndexOf(":"));
+        }
         name = name.replaceAll("http://", "");
         return name;
     }
