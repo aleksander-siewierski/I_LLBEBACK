@@ -9,15 +9,18 @@ public class JobStatus {
     private int duration;
     private boolean isBuilding;
     private long timestamp;
+    private String color;
 
-
-    public JobStatus(String jobName, String shortJobName, String serverName, int completion, int estimatedDuration, int duration, boolean isBuilding, long timestamp) {
+    public JobStatus(String jobName, String shortJobName, String serverName, int completion, int estimatedDuration,
+        int duration, boolean isBuilding, long timestamp, String color) {
         this(jobName, completion, estimatedDuration, duration, isBuilding, timestamp);
         this.serverName = serverName;
+        this.color = color;
         this.setShortJobName(shortJobName);
     }
 
-    public JobStatus(String jobName, int completion, int estimatedDuration, int duration, boolean isBuilding, long timestamp) {
+    public JobStatus(String jobName, int completion, int estimatedDuration, int duration, boolean isBuilding,
+        long timestamp) {
         this.jobName = jobName;
         this.completion = completion;
         this.estimatedDuration = estimatedDuration;
@@ -33,6 +36,10 @@ public class JobStatus {
 
     public String getJobName() {
         return jobName;
+    }
+
+    public void setJobName(String jobName) {
+        this.jobName = jobName;
     }
 
     public int getCompletion() {
@@ -59,10 +66,6 @@ public class JobStatus {
         this.serverName = serverName;
     }
 
-    public void setJobName(String jobName) {
-        this.jobName = jobName;
-    }
-
     public long getTimestamp() {
         return timestamp;
     }
@@ -73,5 +76,13 @@ public class JobStatus {
 
     public void setShortJobName(String shortJobName) {
         this.shortJobName = shortJobName;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 }

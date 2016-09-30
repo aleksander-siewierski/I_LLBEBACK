@@ -2,12 +2,10 @@ package com.hrs.shipit.illbeback.configuration.controller;
 
 import com.hrs.shipit.illbeback.configuration.service.ConfigurationService;
 import com.hrs.shipit.illbeback.model.JobStatus;
+import com.hrs.shipit.illbeback.model.ServerStatus;
 import com.hrs.shipit.illbeback.model.jenkins.Job;
-import com.hrs.shipit.illbeback.model.jenkins.Server;
 import com.hrs.shipit.illbeback.parser.ServerParser;
 import com.hrs.shipit.illbeback.updater.BuildStatusUpdater;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,8 +33,8 @@ public class ConfigurationController {
     private BuildStatusUpdater buildStatusUpdater;
 
     @RequestMapping(value = "server/add/", method = RequestMethod.POST)
-    public Server addServer(@RequestParam("url") String url) {
-        Server server = serverParser.parseServerInfo(url);
+    public ServerStatus addServer(@RequestParam("url") String url) {
+        ServerStatus server = serverParser.parseServerStatus(url);
         service.addServer(url, server);
 
         return server;
@@ -76,7 +74,7 @@ public class ConfigurationController {
     @RequestMapping(value = "job/", method = RequestMethod.GET)
     public List<String> listJobs() {
         return service
-            .getRegisteredJobs()
+            .getRegisteredJobListJobs()
             .stream()
             .map(Job::getUrl)
             .collect(Collectors.toList());

@@ -3,7 +3,7 @@ package com.hrs.shipit.illbeback.model.jenkins;
 import java.util.List;
 
 public class Server {
-    private List<Job> jobs;
+    private List<JobListJob> jobs;
 
     private String serverUrl;
 
@@ -15,12 +15,11 @@ public class Server {
         this.serverUrl = serverUrl;
     }
 
-    public List<Job> getJobs() {
+    public List<JobListJob> getJobs() {
         return jobs;
     }
 
-    public void setJobs(List<Job> jobs) {
+    public void setGetJobs(List<JobListJob> jobs) {
         this.jobs = jobs;
-        jobs.forEach(job -> job.setServer(this));
     }
 }

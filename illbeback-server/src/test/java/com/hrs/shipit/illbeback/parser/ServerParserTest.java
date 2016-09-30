@@ -23,9 +23,9 @@ public class ServerParserTest {
     public void parseJobList() throws Exception {
         SSLWorkAround.disableSslVerification();
 
-        assertThat(parser.parseServerInfo("https://ci.jenkins-ci.org").getJobs(), IsCollectionWithSize.hasSize(9));
+        assertThat(parser.parseServerStatus("https://ci.jenkins-ci.org").getJobs(), IsCollectionWithSize.hasSize(9));
 
-        assertThat(parser.parseServerInfo("https://ci.jenkins-ci.org")
+        assertThat(parser.parseServerStatus("https://ci.jenkins-ci.org")
             .getJobs(), hasItem(hasProperty("url", equalTo("https://ci.jenkins.io/job/Core/"))));
     }
 

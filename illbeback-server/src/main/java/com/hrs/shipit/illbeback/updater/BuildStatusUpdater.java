@@ -17,7 +17,7 @@ public class BuildStatusUpdater {
     @Autowired private ConfigurationService configuration;
 
     public List<JobStatus> updateStatuses() {
-        return configuration.getRegisteredJobs().stream().map(parser::parseBuildStatusForJob).collect(toList());
+        return configuration.getRegisteredJobListJobs().stream().map(parser::parseBuildStatusForJob).collect(toList());
     }
 
 }

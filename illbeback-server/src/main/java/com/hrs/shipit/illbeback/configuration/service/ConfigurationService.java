@@ -1,7 +1,7 @@
 package com.hrs.shipit.illbeback.configuration.service;
 
+import com.hrs.shipit.illbeback.model.ServerStatus;
 import com.hrs.shipit.illbeback.model.jenkins.Job;
-import com.hrs.shipit.illbeback.model.jenkins.Server;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -9,15 +9,15 @@ import java.util.*;
 @Service
 public class ConfigurationService {
 
-    private Map<String, Server> servers = new HashMap<>();
+    private Map<String, ServerStatus> servers = new HashMap<>();
 
-    private List<Job> registeredJobs = new ArrayList<>();
+    private List<Job> registeredJobListJobs = new ArrayList<>();
 
-    public Map<String, Server> getServers() {
+    public Map<String, ServerStatus> getServers() {
         return servers;
     }
 
-    public ConfigurationService addServer(String url, Server server) {
+    public ConfigurationService addServer(String url, ServerStatus server) {
         servers.put(url, server);
 
         return this;
@@ -29,12 +29,12 @@ public class ConfigurationService {
         return this;
     }
 
-    public List<Job> getRegisteredJobs() {
-        return registeredJobs;
+    public List<Job> getRegisteredJobListJobs() {
+        return registeredJobListJobs;
     }
 
-    public ConfigurationService registerJob(Job job) {
-        registeredJobs.add(job);
+    public ConfigurationService registerJob(Job jobListJob) {
+        registeredJobListJobs.add(jobListJob);
 
         return this;
     }
@@ -51,14 +51,14 @@ public class ConfigurationService {
     public ConfigurationService removeJob(String jobUrl) {
         Optional<Job> job = findJobByJobUrl(jobUrl);
         if (job.isPresent()) {
-            registeredJobs.remove(job.get());
+            registeredJobListJobs.remove(job.get());
         }
 
         return this;
     }
 
-    public ConfigurationService removeJob(Job job) {
-        registeredJobs.remove(job);
+    public ConfigurationService removeJob(Job jobListJob) {
+        registeredJobListJobs.remove(jobListJob);
 
         return this;
     }
@@ -75,6 +75,6 @@ public class ConfigurationService {
     }
 
     public boolean containsJob(Job job) {
-       return getRegisteredJobs().contains(job);
+       return getRegisteredJobListJobs().contains(job);
     }
 }
