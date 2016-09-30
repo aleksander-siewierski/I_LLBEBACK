@@ -1,11 +1,72 @@
-.row ul {
+body {
+	margin: 20px;
+}
+ul.jobs,
+ul.table {
 	list-style-type: none;
-	margin: 20px 0;
+	margin: 10px 0;
 	padding: 0;
 }
-.row {
-	background: #ccc;
+ul.table {
+	margin-top: 20px;
 }
-body {
-	padding: 20px;
+ul.jobs li,
+ul.table li {
+	margin-bottom: 5px;
+}
+
+ul.jobs li.gray {
+	background: #f7f7f7;
+	padding: 5px 0;
+}
+.row.first h1 {
+	text-align: center;
+	color: rgb(255, 255, 255);
+	font-size: 50px;
+	background-color: rgb(17, 17, 17);
+	text-shadow: rgb(255, 255, 255) 0px -1px 4px, rgb(255, 255, 0) 0px -2px 10px, rgb(255, 128, 0) 0px -10px 20px, rgb(255, 0, 0) 0px -18px 40px;
+	border-radius: 5px;
+	margin-top: 0;
+}
+.row-first .col-md-6 {
+	padding-left: 0 !important;
+}
+h3 {
+	text-transform: uppercase;
+    color: #959595;
+    font-size: 16px;
+    font-weight: bold;
+    font-family: helvetica, arial;
+    margin-bottom: 15px;
+}
+p.jsLoadingDataInfo,
+.alert-warning > p {
+	background: url('../img/loader.gif') no-repeat;
+	padding-left: 40px;
+	height: 35px;
+	padding-top: 10px;
+}
+.progressbar {
+	width: 100%;
+	background: #5cb85c;
+	display: inline-block;
+	padding: 6px 10px;
+	color: #333;
+}
+.progressbar-content {
+	width: 200px;
+	border: 1px solid #4cae4c;
+	border-radius: 2px;
+	display: inline-block;
+	margin-left: 10px;
+}
+.alert-warning {
+	display: none;
+}
+a.clear-list {
+	float: left;
+    margin-right: 20px;
+}
+img.terminator {
+	float: left;
 }

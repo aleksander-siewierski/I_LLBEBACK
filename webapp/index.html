@@ -10,20 +10,22 @@
         <link media="all" href="/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
         <link media="all" href="/css/style.css" type="text/css" rel="stylesheet" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <link rel="shortcut icon" type="image/png" href="/img/favicon.ico" />
     </head>
     <body>
         <div id="main-content" ng-controller="MainController" class="container">
         <br />
             <div class="row first">
                 <div class="col-md-6">
+                    <img src="img/terminator.png" class="terminator" />
                     <h1>I will be back!</label></h1>
                 </div>
                 <div class="col-md-6">
-                    <form class="form-inline"  ng-submit="addMachine();">
+                    <form class="form-inline" ng-submit="addMachine();">
 												
                         <div class="input-group input-group-lg">
                             <label for="name" class="input-group-addon">Add new machine</label>
-                            <input type="text" id="name" class="form-control" placeholder="http://detpuw1-jenkins-update-971.data.det:8081/" ng-model="url" >
+                            <input type="text" id="name" class="form-control" placeholder="http://detpuw1-jenkins-update-971.data.det:8081/" ng-model="url" required>
 							<span class="input-group-btn">
 								<button id="send" class="btn btn-default" type="submit">Send</button>
 							</span>
@@ -37,7 +39,7 @@
                 <h3>Your registered jobs:</h3>
                 <p class="jsLoadingDataInfo">Loading data...</p>
                 <ul class="jobs">
-                    <li ng-repeat="cjob in currentJobs" ng-class="{blink: cjob.progress !== ''}">
+                    <li ng-repeat="cjob in currentJobs" ng-class-odd="'gray'">
                         <input type="button" class="btn btn-primary btn-sm" data-url="{{ cjob.url }}" value="remove" ng-click="removeThisJob($event, cjob.url)" />
                         {{ cjob.url }}
 
@@ -46,19 +48,30 @@
                                 <span>{{ cjob.progress }}</span>
                             </div>    
                         </div>
+
+                        <div style="float: right;" ng-if="cjob.progress !== ''">
+                            <img src="img/robot.gif" />
+                        </div>
                     </li>
                 </ul>
             </div>
 
+            <div class="alert alert-warning">
+                <p>
+                    <strong>Info!</strong> Your machine are loading...
+                </p>
+            </div>
+
             <div class="row jsAvailableJobs hidden">
-                <h3>Jobs</h3>
+                <h3>Jobs:</h3>
 
-                <a href="javascript:" class="btn btn-default" ng-click="clearJobsList()">Clear list</a>
+                <a href="javascript:" class="btn btn-default clear-list" ng-click="clearJobsList()">Clear list</a>
 
-                <label>
-                    Search: 
-                    <input ng-model="searchText">
-                </label>
+                
+                <div class="input-group">
+                    <label class="input-group-addon">Search:</label>
+                    <input class="form-control" ng-model="searchText">
+                </div>
 
                 <ul class="table table-striped">
                     <li ng-repeat="job in jobs | filter:searchText"><input type="button" class="btn btn-success btn-sm" value="add job" ng-click="addThisJob(job.url)" /> {{ job.name }}</li>
@@ -73,16 +86,5 @@
         <script src="/js/stomp.min.js"></script>
         <script src="/js/angular.min.js" type="text/javascript"></script>
         <script src="/js/app.js"></script> 
-        
-
-        <script type="text/javascript">
-            $(window).ready(function() {
-                $('.blink').fadeOut('slow', function() {
-                  $(this).fadeIn('slow', function(){
-                      blink(this);
-                  });
-                });
-            })
-        </script>
     </body>
 </html>

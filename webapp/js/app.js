@@ -12,6 +12,8 @@ app.controller('MainController', function MainController($scope, $http){
     $scope.currentJobs = [];
 
     $scope.addMachine = function(){
+        $('.alert-warning').show();
+
         $http({
             method: 'POST',
             url: domain+"/api/configuration/server/add/",
@@ -21,6 +23,7 @@ app.controller('MainController', function MainController($scope, $http){
             $scope.url = "";
             $scope.jobs = response.data.jobs; 
             $(".jsAvailableJobs").removeClass("hidden");
+            $('.alert-warning').hide();
         }, function errorCallback(response) {
             alert("Incorrect url format");
             $scope.url = "";
@@ -161,16 +164,16 @@ app.controller('MainController', function MainController($scope, $http){
 
         // find changes
         for (var i = 0; i<message.length; i++){
-            if (!lastStatuses.hasOwnProperty(message[i].jobName) || message[i].building != lastStatuses[message[i].jobName]){
+            if (lastStatuses.hasOwnProperty(message[i].jobName) && message[i].building != lastStatuses[message[i].jobName]){
                 lastStatuses[message[i].jobName] = message[i].building;
                 if (message[i].building === true){
-                    var n = new Notification("New build started of " + message[i].jobName, {
+                    var n = new Notification("New build started: " + message[i].shortJobName, {
                       tag: 'soManyNotification',
                       icon: 'img/jenkins.png'
                     });
                 }
                 if (message[i].building === false){
-                    var n = new Notification("New build started of " + message[i].jobName + " finished!", {
+                    var n = new Notification("Finished: " + message[i].shortJobName, {
                         tag: 'soManyNotification',
                         icon: 'img/jenkins.png'
                       });
