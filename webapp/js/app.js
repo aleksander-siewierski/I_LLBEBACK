@@ -20,6 +20,7 @@ app.controller('MainController', function MainController($scope, $http){
         }).then(function successCallback(response) {
             $scope.url = "";
             $scope.jobs = response.data.jobs; 
+            $(".jsAvailableJobs").removeClass("hidden");
         }, function errorCallback(response) {
             alert("Incorrect url format");
             $scope.url = "";
@@ -33,6 +34,7 @@ app.controller('MainController', function MainController($scope, $http){
             data: $.param({url: jobUrl}),
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function successCallback(response) {
+          $scope.currentJobs.push({ "url" : jobUrl, "building" : false, progress : "" });
             console.log(response)   
         }, function errorCallback(response) {
             if (response.data.hasOwnProperty("error")){
@@ -43,15 +45,16 @@ app.controller('MainController', function MainController($scope, $http){
         });
     }
 
-    $scope.removeThisJob = function(jobUrl){
-        if (confirm("Are You sure to want to remove this job? "+jobUrl)){
+    $scope.removeThisJob = function($event, jobUrl){
+      
+        if (confirm("Are You sure to want to remove this job? ")){
             $http({
             method: 'POST',
             url: domain+"/api/configuration/job/remove/",
             data: $.param({url: jobUrl}),
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
           }).then(function successCallback(response) {
-             alert("Job has benn removed")
+            $($event.target).closest("li").fadeOut();
           }, function errorCallback(response) {
             alert("Unknown error occurd");
           });
@@ -60,6 +63,7 @@ app.controller('MainController', function MainController($scope, $http){
 
     $scope.clearJobsList = function(){
         $scope.jobs = [];
+        $(".jsAvailableJobs").addClass("hidden");
     }
 
 
@@ -157,25 +161,53 @@ app.controller('MainController', function MainController($scope, $http){
 
         // find changes
         for (var i = 0; i<message.length; i++){
-            if (!lastStatuses.hasOwnProperty(message[i].projectName) || message[i].building != lastStatuses[message[i].projectName]){
-                lastStatuses[message[i].projectName] = message[i].building;
+            if (!lastStatuses.hasOwnProperty(message[i].jobName) || message[i].building != lastStatuses[message[i].jobName]){
+                lastStatuses[message[i].jobName] = message[i].building;
                 if (message[i].building === true){
-                    var n = new Notification("New build started of "+message[i].projectName, {tag: 'soManyNotification'});
-                    alert("New build started of "+message[i].projectName);
+                    var n = new Notification("New build started of " + message[i].jobName, {
+                      tag: 'soManyNotification',
+                      icon: 'img/jenkins.png'
+                    });
+                }
+                if (message[i].building === false){
+                    var n = new Notification("New build started of " + message[i].jobName + " finished!", {
+                        tag: 'soManyNotification',
+                        icon: 'img/jenkins.png'
+                      });
                 }
             }
-            console.log(message[i].projectName+" ("+message[i].building+")");
+            console.log(message[i].jobName+" ("+message[i].building+")");
         } 
 
         //update list in memory
         lastStatuses = [];
         $scope.currentJobs = [];
+        var currentTime = new Date().getTime();
         for (var i = 0; i<message.length; i++){
-            lastStatuses[message[i].projectName] = message[i].building;
-            $scope.currentJobs.push(message[i].projectName);
+            var progress = (currentTime-message[i].timestamp)/message[i].estimatedDuration*100;
+            if (message[i].building && progress>=100){
+              progress = 99;
+            }
+            lastStatuses[message[i].jobName] = message[i].building;
+            $scope.currentJobs.push({ "url" : message[i].jobName, "building" : message[i].building, progress : message[i].building && progress<100 ? progress.toFixed()+"%" : "" });
+            // $scope.currentJobs[i]["url"] = message[i].jobName;
+            // $scope.currentJobs[i]["building"] = message[i].building;
+            // $scope.currentJobs[i]["progress"] = message[i].building && progress<100 ? progress : "";
+            // $scope.currentJobs.push(message[i].jobName + (message[i].building && progress<100 ? " <span>"+(progress).toFixed(0) +"%</span>" : ""));
             $scope.$apply();
         } 
+        $(".jsLoadingDataInfo").hide();
         // $scope.myJobs = lastStatuses;
     }
+
+    function blink(selector){
+      $(selector).fadeOut('slow', function(){
+          $(this).fadeIn('slow', function(){
+              blink(this);
+          });
+      });
+    }
+
+    blink('.blink');
      
 });
