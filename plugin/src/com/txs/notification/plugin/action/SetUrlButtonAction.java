@@ -10,18 +10,18 @@ import java.awt.event.ActionListener;
 /**
  * Created by jarek on 29.09.16.
  */
-public class setUrlButtonAction implements ActionListener {
+public class SetUrlButtonAction implements ActionListener {
     private JLabel urlValue;
     private JPanel pluginToolWindowContent;
 
-    public setUrlButtonAction(JLabel urlValue, JPanel pluginToolWindowContent) {
+    public SetUrlButtonAction(JLabel urlValue, JPanel pluginToolWindowContent) {
         this.urlValue = urlValue;
         this.pluginToolWindowContent = pluginToolWindowContent;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String txt= Messages.showInputDialog(pluginToolWindowContent, "Enter server url (without http://)", "", Messages.getQuestionIcon());
+        String txt= Messages.showInputDialog(pluginToolWindowContent, "Enter server url, example: http://ship.it ", "", Messages.getInformationIcon());
         if(txt == null || txt.equals("")){
             return;
         }

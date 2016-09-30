@@ -18,14 +18,16 @@ import java.io.InputStreamReader;
 /**
  * Created by jarek on 29.09.16.
  */
-public class updateJobListAction extends TimerTask{
+public class UpdateJobListAction extends TimerTask{
     NotificationWrapper noti;
     private JList jobList;
+    private JLabel urlValue;
     private Gson json;
     private HashMap<String, Boolean> statusMap;
 
-    public updateJobListAction(JList jobList, HashMap<String, Boolean> statusMap) {
+    public UpdateJobListAction(JList jobList, JLabel urlValue, HashMap<String, Boolean> statusMap) {
         this.jobList = jobList;
+        this.urlValue = urlValue;
         this.statusMap = statusMap;
         noti = new NotificationWrapper();
         json = new Gson();
@@ -54,10 +56,26 @@ public class updateJobListAction extends TimerTask{
                     jobList.setModel(listModel);
                 }
             });
-
+            statusMap.put("connectionOK", true);
         } catch (Exception e) {
-            noti.error("Can't recive job data!");
+            if(statusMap.get("connectionOK").equals(true)){
+                noti.error("<b>W</b>hat a <b>T</b>errible <b>F</b>ailure?!");
+                statusMap.put("connectionOK", false);
+            }
         }
+
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                if(statusMap.get("connectionOK").equals(true)){
+                    urlValue.setIcon(new ImageIcon(getClass().getResource("/ok.png")));
+                } else {
+                    urlValue.setIcon(new ImageIcon(getClass().getResource("/error.png")));
+                }
+            }
+        });
+
+
 
     }
 
@@ -74,9 +92,9 @@ public class updateJobListAction extends TimerTask{
         }
         String notificationText = "Job <b>"+ listEntry.getShortJobName()+"</b> on server "+ listEntry.getServerName();
         if(listEntry.isBuilding()){
-            noti.info(notificationText+" <font color='blue'><b>started!</b></font>");
+            noti.info(notificationText+" <font color='"+listEntry.getProgressColor()+"'><b>started!</b></font>");
         } else {
-            noti.info(notificationText+" <font color='red'><b>finished!</b></font>");
+            noti.info(notificationText+" <font color='"+listEntry.getProgressColor()+"'><b>finished!</b></font>");
         }
         statusMap.put(listEntry.getId(), listEntry.isBuilding());
     }

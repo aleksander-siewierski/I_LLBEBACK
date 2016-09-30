@@ -6,6 +6,7 @@
 .gradle/
 
 build/
+plugin/plugin.zip
 
 
 # Mobile Tools for Java (J2ME)

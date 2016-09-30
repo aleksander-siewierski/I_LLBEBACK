@@ -8,11 +8,11 @@ import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.util.containers.HashMap;
-import com.txs.notification.plugin.action.jobScheduleRunnableAction;
-import com.txs.notification.plugin.action.clearButtonAction;
-import com.txs.notification.plugin.action.setUrlButtonAction;
+import com.txs.notification.plugin.action.JobScheduleRunnableAction;
+import com.txs.notification.plugin.action.ClearButtonAction;
+import com.txs.notification.plugin.action.SetUrlButtonAction;
+import com.txs.notification.plugin.model.DisabledItemSelectionModel;
 import com.txs.notification.plugin.model.ListEntry;
-import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -32,16 +32,21 @@ public class StatusArea implements ToolWindowFactory {
 
     public StatusArea() {
         statusMap = new HashMap<String, Boolean>();
-        jobList.clearSelection();
+        statusMap.put("connectionOK", true);
+
         listModel = new DefaultListModel< ListEntry>();
         jobList.setModel(listModel);
+        jobList.clearSelection();
+        jobList.setSelectionModel(new DisabledItemSelectionModel());
+        jobList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
         String url = PropertiesComponent.getInstance().getValue("IWillBeBack.serverUrl");
         urlValue.setText(url);
 
-        setUrlButton.addActionListener(new setUrlButtonAction(urlValue, pluginToolWindowContent));
-        clearButton.addActionListener(new clearButtonAction(urlValue, pluginToolWindowContent));
+        setUrlButton.addActionListener(new SetUrlButtonAction(urlValue, pluginToolWindowContent));
+        clearButton.addActionListener(new ClearButtonAction(urlValue, jobList, pluginToolWindowContent));
 
-        ApplicationManager.getApplication().executeOnPooledThread(new jobScheduleRunnableAction(jobList, statusMap));
+        ApplicationManager.getApplication().executeOnPooledThread(new JobScheduleRunnableAction(jobList, urlValue, statusMap));
 
     }
 
@@ -49,9 +54,7 @@ public class StatusArea implements ToolWindowFactory {
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
         pluginToolWindow = toolWindow;
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
-
         Content content = contentFactory.createContent(pluginToolWindowContent, "", false);
-
         toolWindow.getContentManager().addContent(content);
     }
 

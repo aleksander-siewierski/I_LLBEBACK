@@ -17,6 +17,7 @@ public class ListEntry {
     private long duration;
     private boolean building;
     private long timestamp;
+    private String color;
 
     public String getShortJobName() {
         return shortJobName;
@@ -80,6 +81,32 @@ public class ListEntry {
         this.timestamp = timestamp;
     }
 
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getProgressColor(){
+        if (isBuilding()){
+            return "orange";
+        }
+        if (getColor() == null){
+            return "gray";
+        }
+        switch (getColor()) {
+            case "blue":
+                return "green";
+            case "notbuilt":
+                return "black";
+            case "red":
+                return "red";
+        }
+        return "yellow";
+    }
+
     public String getProgress(){
         long unixTime = System.currentTimeMillis();
         long duration = unixTime - timestamp;
@@ -108,6 +135,6 @@ public class ListEntry {
 
     @Override
     public String toString() {
-        return "<html><font color='green'><b>"+getProgress()+"</b></font> - <b>"+getShortJobName()+"</b> - <font color='gray'>"+getServerName()+"</font></html>";
+        return "<html><font color='"+getProgressColor()+"'><b>"+getProgress()+"</b></font> - <b>"+getShortJobName()+"</b> - <font color='gray'>"+getServerName()+"</font></html>";
     }
 }
