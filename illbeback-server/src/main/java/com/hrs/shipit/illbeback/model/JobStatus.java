@@ -1,5 +1,8 @@
 package com.hrs.shipit.illbeback.model;
 
+import com.hrs.shipit.illbeback.model.jenkins.BuildStatus;
+import com.hrs.shipit.illbeback.model.jenkins.Job;
+
 public class JobStatus {
     private String shortJobName;
     private String jobName;
@@ -11,27 +14,21 @@ public class JobStatus {
     private long timestamp;
     private String color;
 
-    public JobStatus(String jobName, String shortJobName, String serverName, int completion, int estimatedDuration,
-        int duration, boolean isBuilding, long timestamp, String color) {
-        this(jobName, completion, estimatedDuration, duration, isBuilding, timestamp);
-        this.serverName = serverName;
-        this.color = color;
-        this.setShortJobName(shortJobName);
-    }
-
-    public JobStatus(String jobName, int completion, int estimatedDuration, int duration, boolean isBuilding,
-        long timestamp) {
-        this.jobName = jobName;
-        this.completion = completion;
-        this.estimatedDuration = estimatedDuration;
-        this.duration = duration;
-        this.isBuilding = isBuilding;
-        this.timestamp = timestamp;
+    public JobStatus(Job job, BuildStatus status) {
+        this.serverName = job.getServer().getServerUrl();
+        this.color = job.getColor();
+        this.shortJobName = job.getName();
+        this.jobName = job.getUrl();
+        this.completion = status.getDuration() / status.getEstimatedDuration();
+        this.estimatedDuration = status.getEstimatedDuration();
+        this.duration = status.getDuration();
+        this.isBuilding = status.isBuilding();
+        this.timestamp = status.getTimestamp();
     }
 
     @Override
     public String toString() {
-        return "JobStatus{" + "jobName='" + jobName + '\'' + "shortJobName='" + shortJobName + '\'' + "serverName='" + serverName + '\'' + ", completion=" + completion + ", estimatedDuration=" + estimatedDuration + ", duration=" + duration + ", isBuilding=" + isBuilding + ", timestamp=" + timestamp + '}';
+        return "JobStatus{" + "shortJobName='" + shortJobName + '\'' + ", jobName='" + jobName + '\'' + ", serverName='" + serverName + '\'' + ", completion=" + completion + ", estimatedDuration=" + estimatedDuration + ", duration=" + duration + ", isBuilding=" + isBuilding + ", timestamp=" + timestamp + ", color='" + color + '\'' + '}';
     }
 
     public String getJobName() {

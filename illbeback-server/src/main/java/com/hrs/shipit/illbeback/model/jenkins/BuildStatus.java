@@ -1,7 +1,7 @@
 package com.hrs.shipit.illbeback.model.jenkins;
 
 public class BuildStatus {
-    private boolean building;
+    private boolean building = false;
     private int duration;
     private int estimatedDuration;
     private long timestamp;
@@ -36,5 +36,9 @@ public class BuildStatus {
 
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public static BuildStatus empty() {
+       return new BuildStatus();
     }
 }

@@ -1,8 +1,8 @@
 package com.hrs.shipit.illbeback.model.jenkins;
 
-public class Build {
-    int number;
-    String url;
+class Build {
+    private int number;
+    private String url;
 
     public int getNumber() {
         return number;

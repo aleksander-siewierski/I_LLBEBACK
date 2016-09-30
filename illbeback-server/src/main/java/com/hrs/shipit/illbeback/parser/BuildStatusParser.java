@@ -1,5 +1,6 @@
 package com.hrs.shipit.illbeback.parser;
 
+import com.hrs.shipit.illbeback.configuration.service.ConfigurationService;
 import com.hrs.shipit.illbeback.model.JobStatus;
 import com.hrs.shipit.illbeback.model.jenkins.BuildStatus;
 import com.hrs.shipit.illbeback.model.jenkins.Job;
@@ -17,28 +18,24 @@ public class BuildStatusParser {
     private static final String PARAMETERS = "/lastBuild/api/json?tree=duration,estimatedDuration,building,timestamp";
     private static final Logger LOG = LoggerFactory.getLogger(BuildStatusParser.class);
     @Autowired private JobParser jobParser;
+    @Autowired private ConfigurationService configurationService;
 
     public JobStatus parseBuildStatusForJob(Job job) {
         SSLWorkAround.disableSslVerification();
-
+        BuildStatus status = BuildStatus.empty();
         RestTemplate restTemplate = new RestTemplate();
         try {
             Job updatedJob = jobParser.parseJobStatus(job.getUrl());
-            if (job.getLastBuild() != null) {
-                BuildStatus status = restTemplate.getForObject(updatedJob.getUrl() + PARAMETERS, BuildStatus.class);
+            configurationService.updateJob(job, updatedJob);
 
-                return new JobStatus(updatedJob.getUrl(), updatedJob.getName(), job.getServer().getServerUrl(), status
-                    .getDuration() / status.getEstimatedDuration(), status.getEstimatedDuration(), status
-                    .getDuration(), status.isBuilding(), status.getTimestamp(), updatedJob.getColor());
-            } else {
-                return new JobStatus(updatedJob.getUrl(), updatedJob.getName(), job.getServer()
-                    .getServerUrl(), 0, 0, 0, false, 0, updatedJob.getColor());
+            if (job.getLastBuild() != null) {
+                status = restTemplate.getForObject(job.getUrl() + PARAMETERS, BuildStatus.class);
             }
 
         } catch (HttpClientErrorException e) {
             LOG.error("Failed updating", e);
-
-            return new JobStatus("failed", "failed", "failed", 0, 0, 0, false, 0, "failed");
         }
+
+        return new JobStatus(job, status);
     }
 }

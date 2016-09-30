@@ -23,21 +23,33 @@ import java.util.stream.Collectors;
 @RequestMapping(path = "api/configuration/", produces = "application/json")
 public class ConfigurationController {
 
-    @Autowired
-    private ConfigurationService service;
+    @Autowired private ConfigurationService service;
 
-    @Autowired
-    private ServerParser serverParser;
+    @Autowired private ServerParser serverParser;
 
-    @Autowired
-    private BuildStatusUpdater buildStatusUpdater;
+    @Autowired private BuildStatusUpdater buildStatusUpdater;
 
     @RequestMapping(value = "server/add/", method = RequestMethod.POST)
-    public ServerStatus addServer(@RequestParam("url") String url) {
+    public ResponseEntity<ServerStatus> addServer(@RequestParam("url") String url) {
+        if (url.charAt(url.length() - 1) != '/') {
+            url += "/";
+        }
+
         ServerStatus server = serverParser.parseServerStatus(url);
         service.addServer(url, server);
 
-        return server;
+        return ResponseEntity.ok(server);
+    }
+
+    @RequestMapping(value = "server/remove/", method = RequestMethod.POST)
+    public ResponseEntity<String> removeServer(@RequestParam("url") String url) {
+        if (service.getServers().containsKey(url)) {
+            service.removeServer(url);
+
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("{\"error\": \"Server is not registered\"}", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @RequestMapping(value = "server/show/", method = RequestMethod.POST)
@@ -82,11 +94,7 @@ public class ConfigurationController {
 
     @RequestMapping(value = "job/", method = RequestMethod.GET)
     public List<String> listJobs() {
-        return service
-            .getRegisteredJobListJobs()
-            .stream()
-            .map(Job::getUrl)
-            .collect(Collectors.toList());
+        return service.getRegisteredJobs().stream().map(Job::getUrl).collect(Collectors.toList());
     }
 
     @RequestMapping(value = "all/", method = RequestMethod.GET)
