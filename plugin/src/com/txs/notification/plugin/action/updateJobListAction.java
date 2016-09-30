@@ -20,12 +20,12 @@ import java.io.InputStreamReader;
  */
 public class updateJobListAction extends TimerTask{
     NotificationWrapper noti;
-    private DefaultListModel listModel;
+    private JList jobList;
     private Gson json;
     private HashMap<String, Boolean> statusMap;
 
-    public updateJobListAction(DefaultListModel listModel, HashMap<String, Boolean> statusMap) {
-        this.listModel = listModel;
+    public updateJobListAction(JList jobList, HashMap<String, Boolean> statusMap) {
+        this.jobList = jobList;
         this.statusMap = statusMap;
         noti = new NotificationWrapper();
         json = new Gson();
@@ -39,38 +39,46 @@ public class updateJobListAction extends TimerTask{
         }
 
         try {
+            DefaultListModel<ListEntry> listModel = new DefaultListModel<ListEntry>();
 
             String content = getUrlAsString(url+"/api/configuration/all/");
             ListEntry[] myList = (ListEntry[]) json.fromJson(content, ListEntry[].class);
-            if (myList.length > 0){
-                listModel.removeAllElements();
-            }
             for(int i = 0; i < myList.length; i++){
                 listModel.add(i, myList[i]);
-                if (myList[i].getId() == null){
-                    continue;
-                }
-                if(statusMap.get(myList[i].getId()) == null){
-                    statusMap.put(myList[i].getId(), myList[i].isBuilding());
-                    continue;
-                }
-                if(statusMap.get(myList[i].getId()).equals(myList[i].isBuilding())){
-                    continue;
-                }
-                String notificationText = "Job <b>"+myList[i].getShortJobName()+"</b> on server "+myList[i].getServerName();
-                if(myList[i].isBuilding()){
-                    noti.info(notificationText+" <font color='blue'><b>started!</b></font>");
-                } else {
-                    noti.info(notificationText+" <font color='red'><b>finished!</b></font>");
-                }
-                statusMap.put(myList[i].getId(), myList[i].isBuilding());
+                showNotification(myList[i]);
             }
-            
+
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    jobList.setModel(listModel);
+                }
+            });
 
         } catch (Exception e) {
             noti.error("Can't recive job data!");
         }
 
+    }
+
+    private void showNotification(ListEntry listEntry) {
+        if (listEntry.getId() == null){
+            return;
+        }
+        if(statusMap.get(listEntry.getId()) == null){
+            statusMap.put(listEntry.getId(), listEntry.isBuilding());
+            return;
+        }
+        if(statusMap.get(listEntry.getId()).equals(listEntry.isBuilding())){
+            return;
+        }
+        String notificationText = "Job <b>"+ listEntry.getShortJobName()+"</b> on server "+ listEntry.getServerName();
+        if(listEntry.isBuilding()){
+            noti.info(notificationText+" <font color='blue'><b>started!</b></font>");
+        } else {
+            noti.info(notificationText+" <font color='red'><b>finished!</b></font>");
+        }
+        statusMap.put(listEntry.getId(), listEntry.isBuilding());
     }
 
     public String getUrlAsString(String url) throws Exception {

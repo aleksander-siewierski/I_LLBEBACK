@@ -41,7 +41,7 @@ public class StatusArea implements ToolWindowFactory {
         setUrlButton.addActionListener(new setUrlButtonAction(urlValue, pluginToolWindowContent));
         clearButton.addActionListener(new clearButtonAction(urlValue, pluginToolWindowContent));
 
-        ApplicationManager.getApplication().executeOnPooledThread(new jobScheduleRunnableAction(listModel, statusMap));
+        ApplicationManager.getApplication().executeOnPooledThread(new jobScheduleRunnableAction(jobList, statusMap));
 
     }
 
@@ -51,6 +51,7 @@ public class StatusArea implements ToolWindowFactory {
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
 
         Content content = contentFactory.createContent(pluginToolWindowContent, "", false);
+
         toolWindow.getContentManager().addContent(content);
     }
 

@@ -13,11 +13,11 @@ import java.util.*;
  */
 public class jobScheduleRunnableAction implements Runnable {
     private HashMap<String, Boolean> statusMap;
-    private DefaultListModel listModel;
+    private JList jobList;
 
-    public jobScheduleRunnableAction(DefaultListModel listModel, HashMap<String, Boolean> statusMap) {
+    public jobScheduleRunnableAction(JList jobList, HashMap<String, Boolean> statusMap) {
         this.statusMap = statusMap;
-        this.listModel = listModel;
+        this.jobList = jobList;
     }
 
     @Override
@@ -26,7 +26,7 @@ public class jobScheduleRunnableAction implements Runnable {
 
         java.util.Timer timer = new java.util.Timer();
 
-        timer.schedule(new updateJobListAction(listModel, statusMap), 0, 10*1000);
+        timer.schedule(new updateJobListAction(jobList, statusMap), 0, 10*1000);
 
     }
 }
