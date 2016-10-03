@@ -23,7 +23,7 @@ public class JobScheduleRunnableAction implements Runnable {
 
         java.util.Timer timer = new java.util.Timer();
 
-        timer.schedule(new UpdateJobListAction(jobList, urlValue, statusMap), 0, 10*1000);
+        timer.schedule(new UpdateJobListAction(jobList, urlValue, statusMap), 0, 6*1000);
 
     }
 }

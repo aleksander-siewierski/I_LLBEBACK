@@ -111,8 +111,12 @@ public class ListEntry {
         long unixTime = System.currentTimeMillis();
         long duration = unixTime - timestamp;
 
-        if (duration >= estimatedDuration){
+        if (!isBuilding()){
             return "100%";
+        }
+
+        if (duration >= estimatedDuration){
+            return "99%";
         }
         int result = (int) Math.round(((float)duration/(float)estimatedDuration)*(float)100);
         return Integer.toString(result)+"%";

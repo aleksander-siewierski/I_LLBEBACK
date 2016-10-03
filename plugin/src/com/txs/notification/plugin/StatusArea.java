@@ -11,11 +11,14 @@ import com.intellij.util.containers.HashMap;
 import com.txs.notification.plugin.action.JobScheduleRunnableAction;
 import com.txs.notification.plugin.action.ClearButtonAction;
 import com.txs.notification.plugin.action.SetUrlButtonAction;
+import com.txs.notification.plugin.action.ShowSettingsAction;
 import com.txs.notification.plugin.model.DisabledItemSelectionModel;
 import com.txs.notification.plugin.model.ListEntry;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * Created by jarek on 29.09.16.
@@ -26,6 +29,8 @@ public class StatusArea implements ToolWindowFactory {
     private JButton setUrlButton;
     private JLabel urlValue;
     private JButton clearButton;
+    private JToolBar toolBar;
+    private JButton settingsButton;
     private ToolWindow pluginToolWindow;
     private DefaultListModel listModel;
     private HashMap<String, Boolean> statusMap;
@@ -40,14 +45,9 @@ public class StatusArea implements ToolWindowFactory {
         jobList.setSelectionModel(new DisabledItemSelectionModel());
         jobList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        String url = PropertiesComponent.getInstance().getValue("IWillBeBack.serverUrl");
-        urlValue.setText(url);
-
-        setUrlButton.addActionListener(new SetUrlButtonAction(urlValue, pluginToolWindowContent));
-        clearButton.addActionListener(new ClearButtonAction(urlValue, jobList, pluginToolWindowContent));
+        settingsButton.addActionListener(new ShowSettingsAction(urlValue, pluginToolWindowContent));
 
         ApplicationManager.getApplication().executeOnPooledThread(new JobScheduleRunnableAction(jobList, urlValue, statusMap));
-
     }
 
     @Override

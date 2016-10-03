@@ -19,46 +19,39 @@
           <selectionMode value="0"/>
         </properties>
       </component>
-      <grid id="18069" layout-manager="GridLayoutManager" row-count="2" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-        <margin top="0" left="0" bottom="0" right="0"/>
+      <toolbar id="40298" binding="toolBar">
         <constraints>
-          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="-1" height="20"/>
+          </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <floatable value="false"/>
+        </properties>
         <border type="none"/>
         <children>
-          <component id="6de83" class="javax.swing.JButton" binding="setUrlButton">
-            <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Set Url"/>
-            </properties>
-          </component>
           <component id="ef935" class="javax.swing.JLabel" binding="urlValue">
-            <constraints>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
+            <constraints/>
             <properties>
-              <icon value="icon13.png"/>
-              <text value="Label"/>
+              <icon value="ok.png"/>
+              <text value=""/>
             </properties>
           </component>
-          <hspacer id="15b97">
-            <constraints>
-              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-          </hspacer>
-          <component id="777da" class="javax.swing.JButton" binding="clearButton" default-binding="true">
-            <constraints>
-              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
+          <component id="d184d" class="javax.swing.JButton" binding="settingsButton" default-binding="true">
+            <constraints/>
             <properties>
-              <text value="Clear"/>
+              <background color="-1315861"/>
+              <enabled value="true"/>
+              <icon value="settings.png"/>
+              <text value=""/>
             </properties>
+            <clientProperties>
+              <hideActionText class="java.lang.Boolean" value="false"/>
+              <html.disable class="java.lang.Boolean" value="false"/>
+            </clientProperties>
           </component>
         </children>
-      </grid>
+      </toolbar>
     </children>
   </grid>
 </form>

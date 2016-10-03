@@ -8,6 +8,7 @@ import com.txs.notification.plugin.model.ListEntry;
 
 import javax.swing.*;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.util.TimerTask;
 import java.net.URL;
@@ -39,15 +40,17 @@ public class UpdateJobListAction extends TimerTask{
         if(url == null || url.equals("")){
             return;
         }
-
         try {
             DefaultListModel<ListEntry> listModel = new DefaultListModel<ListEntry>();
 
             String content = getUrlAsString(url+"/api/configuration/all/");
+            //noti.info(content);
             ListEntry[] myList = (ListEntry[]) json.fromJson(content, ListEntry[].class);
             for(int i = 0; i < myList.length; i++){
                 listModel.add(i, myList[i]);
-                showNotification(myList[i]);
+                if (PropertiesComponent.getInstance().getBoolean("IWillBeBack.notifications")) {
+                    showNotification(myList[i]);
+                }
             }
 
             SwingUtilities.invokeLater(new Runnable() {
@@ -101,7 +104,11 @@ public class UpdateJobListAction extends TimerTask{
 
     public String getUrlAsString(String url) throws Exception {
             URL urlObj = new URL(url);
-            URLConnection con = urlObj.openConnection();
+            HttpURLConnection.setFollowRedirects(false);
+            HttpURLConnection con = (HttpURLConnection) urlObj.openConnection();
+            con.setRequestMethod("GET");
+
+            con.setConnectTimeout(2000); //set timeout to 5 seconds
 
             con.setDoOutput(true);
             con.connect();
