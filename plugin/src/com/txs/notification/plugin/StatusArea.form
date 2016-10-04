@@ -8,17 +8,6 @@
     <properties/>
     <border type="none"/>
     <children>
-      <component id="30947" class="javax.swing.JList" binding="jobList">
-        <constraints>
-          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="50"/>
-          </grid>
-        </constraints>
-        <properties>
-          <model/>
-          <selectionMode value="0"/>
-        </properties>
-      </component>
       <toolbar id="40298" binding="toolBar">
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
@@ -52,6 +41,14 @@
           </component>
         </children>
       </toolbar>
+      <component id="7198c" class="javax.swing.JTree" binding="jobList">
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="50"/>
+          </grid>
+        </constraints>
+        <properties/>
+      </component>
     </children>
   </grid>
 </form>

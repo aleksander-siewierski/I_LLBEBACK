@@ -22,11 +22,12 @@
   <depends>com.intellij.modules.lang</depends>
   -->
   <application-components>
-    <!-- Add your application components here -->
   </application-components>
 
   <extensions defaultExtensionNs="com.intellij">
     <toolWindow id="I Will Be Back" icon="/icon13.png" anchor="right" factoryClass="com.txs.notification.plugin.StatusArea"/>
+    <applicationService serviceImplementation="com.txs.notification.plugin.model.ConfigProvider" serviceInterface="com.txs.notification.plugin.model.ConfigProvider" />
+
   </extensions>
 
   <actions>

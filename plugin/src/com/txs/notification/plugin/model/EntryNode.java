@@ -3,13 +3,15 @@ package com.txs.notification.plugin.model;
 import com.intellij.notification.Notification;
 import com.txs.notification.plugin.NotificationWrapper;
 
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
 import java.security.Timestamp;
 import java.util.Date;
 
 /**
  * Created by jarek on 29.09.16.
  */
-public class ListEntry {
+public class EntryNode extends DefaultMutableTreeNode{
     private String shortJobName;
     private String serverName;
     private int completion;
@@ -18,6 +20,15 @@ public class ListEntry {
     private boolean building;
     private long timestamp;
     private String color;
+    private boolean selected;
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
 
     public String getShortJobName() {
         return shortJobName;
@@ -107,6 +118,8 @@ public class ListEntry {
         return "yellow";
     }
 
+
+
     public String getProgress(){
         long unixTime = System.currentTimeMillis();
         long duration = unixTime - timestamp;
@@ -137,8 +150,12 @@ public class ListEntry {
         return null;
     }
 
+    public String getText(){
+        return toString();
+    }
+
     @Override
     public String toString() {
-        return "<html><font color='"+getProgressColor()+"'><b>"+getProgress()+"</b></font> - <b>"+getShortJobName()+"</b> - <font color='gray'>"+getServerName()+"</font></html>";
+        return "<html><font color='"+getProgressColor()+"'><b>"+getProgress()+"</b></font> - <b>"+getShortJobName()+"</b></html>";
     }
 }

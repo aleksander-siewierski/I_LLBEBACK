@@ -2,17 +2,21 @@ package com.txs.notification.plugin.action;
 
 import com.google.gson.Gson;
 import com.intellij.ide.util.PropertiesComponent;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.util.containers.HashMap;
 import com.txs.notification.plugin.NotificationWrapper;
-import com.txs.notification.plugin.model.ListEntry;
+import com.txs.notification.plugin.model.ConfigProvider;
+import com.txs.notification.plugin.model.EntryNode;
+import com.txs.notification.plugin.model.ServerNode;
 
 import javax.swing.*;
-import java.io.IOException;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.util.TimerTask;
 import java.net.URL;
-import java.net.URLConnection;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
@@ -21,12 +25,12 @@ import java.io.InputStreamReader;
  */
 public class UpdateJobListAction extends TimerTask{
     NotificationWrapper noti;
-    private JList jobList;
+    private JTree jobList;
     private JLabel urlValue;
     private Gson json;
     private HashMap<String, Boolean> statusMap;
 
-    public UpdateJobListAction(JList jobList, JLabel urlValue, HashMap<String, Boolean> statusMap) {
+    public UpdateJobListAction(JTree jobList, JLabel urlValue, HashMap<String, Boolean> statusMap) {
         this.jobList = jobList;
         this.urlValue = urlValue;
         this.statusMap = statusMap;
@@ -36,18 +40,22 @@ public class UpdateJobListAction extends TimerTask{
 
     @Override
     public void run() {
-        String url = PropertiesComponent.getInstance().getValue("IWillBeBack.serverUrl");
+        ConfigProvider config = ServiceManager.getService(ConfigProvider.class);
+        String url = config.getServerUrl();
         if(url == null || url.equals("")){
             return;
         }
         try {
-            DefaultListModel<ListEntry> listModel = new DefaultListModel<ListEntry>();
+            DefaultMutableTreeNode root = new DefaultMutableTreeNode();
+
+
 
             String content = getUrlAsString(url+"/api/configuration/all/");
             //noti.info(content);
-            ListEntry[] myList = (ListEntry[]) json.fromJson(content, ListEntry[].class);
+            EntryNode[] myList = (EntryNode[]) json.fromJson(content, EntryNode[].class);
             for(int i = 0; i < myList.length; i++){
-                listModel.add(i, myList[i]);
+                ServerNode server = getServerNode(root, myList[i]);
+                server.add(myList[i]);
                 if (PropertiesComponent.getInstance().getBoolean("IWillBeBack.notifications")) {
                     showNotification(myList[i]);
                 }
@@ -56,7 +64,13 @@ public class UpdateJobListAction extends TimerTask{
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    jobList.setModel(listModel);
+                    DefaultTreeModel model = new DefaultTreeModel(root);
+                    jobList.setModel(model);
+                    TreePath path = new TreePath(root);
+                    for(int i = 0; i < root.getChildCount(); i++){
+                        TreePath nodePath = path.pathByAddingChild(root.getChildAt(i));
+                        jobList.expandPath(nodePath);
+                    }
                 }
             });
             statusMap.put("connectionOK", true);
@@ -82,7 +96,22 @@ public class UpdateJobListAction extends TimerTask{
 
     }
 
-    private void showNotification(ListEntry listEntry) {
+    private ServerNode getServerNode(DefaultMutableTreeNode root, EntryNode entry){
+        int count = root.getChildCount();
+        for (int i = 0; i < count; i++){
+            ServerNode testNode = (ServerNode)root.getChildAt(i);
+            if(testNode.getServerName() != null && testNode.getServerName().equals(entry.getServerName())){
+                return testNode;
+            }
+        }
+        ServerNode server = new ServerNode();
+        server.setServerName(entry.getServerName());
+
+        root.add(server);
+        return server;
+    }
+
+    private void showNotification(EntryNode listEntry) {
         if (listEntry.getId() == null){
             return;
         }

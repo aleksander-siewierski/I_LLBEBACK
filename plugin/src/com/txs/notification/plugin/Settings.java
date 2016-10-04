@@ -1,6 +1,8 @@
 package com.txs.notification.plugin;
 
 import com.intellij.ide.util.PropertiesComponent;
+import com.intellij.openapi.components.ServiceManager;
+import com.txs.notification.plugin.model.ConfigProvider;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -14,8 +16,9 @@ public class Settings extends JDialog {
 
     public Settings() {
         setupElements();
-        serverUrlInput.setText(PropertiesComponent.getInstance().getValue("IWillBeBack.serverUrl", ""));
-        notificationsCheckBox.setSelected(PropertiesComponent.getInstance().getBoolean("IWillBeBack.notifications"));
+        ConfigProvider config = ServiceManager.getService(ConfigProvider.class);
+        serverUrlInput.setText(config.getServerUrl());
+        notificationsCheckBox.setSelected(config.getNotifications());
     }
 
     private void setupElements(){
@@ -52,8 +55,9 @@ public class Settings extends JDialog {
     }
 
     private void onOK() {
-        PropertiesComponent.getInstance().setValue("IWillBeBack.serverUrl", serverUrlInput.getText());
-        PropertiesComponent.getInstance().setValue("IWillBeBack.notifications", notificationsCheckBox.isSelected());
+        ConfigProvider config = ServiceManager.getService(ConfigProvider.class);
+        config.setServerUrl(serverUrlInput.getText());
+        config.setNotifications(notificationsCheckBox.isSelected());
         dispose();
     }
 

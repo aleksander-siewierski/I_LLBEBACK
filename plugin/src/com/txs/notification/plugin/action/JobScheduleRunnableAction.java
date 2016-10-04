@@ -9,10 +9,10 @@ import javax.swing.*;
  */
 public class JobScheduleRunnableAction implements Runnable {
     private HashMap<String, Boolean> statusMap;
-    private JList jobList;
+    private JTree jobList;
     private JLabel urlValue;
 
-    public JobScheduleRunnableAction(JList jobList, JLabel urlValue, HashMap<String, Boolean> statusMap) {
+    public JobScheduleRunnableAction(JTree jobList, JLabel urlValue, HashMap<String, Boolean> statusMap) {
         this.statusMap = statusMap;
         this.jobList = jobList;
         this.urlValue = urlValue;
