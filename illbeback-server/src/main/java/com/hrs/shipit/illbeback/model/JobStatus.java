@@ -19,7 +19,7 @@ public class JobStatus {
         this.color = job.getColor();
         this.shortJobName = job.getName();
         this.jobName = job.getUrl();
-        this.completion = status.getDuration() / status.getEstimatedDuration();
+        this.completion = status.getEstimatedDuration() > 0 ? status.getDuration() / status.getEstimatedDuration() : 0;
         this.estimatedDuration = status.getEstimatedDuration();
         this.duration = status.getDuration();
         this.isBuilding = status.isBuilding();
