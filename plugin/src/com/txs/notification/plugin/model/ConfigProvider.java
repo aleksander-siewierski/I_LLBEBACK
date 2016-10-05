@@ -4,6 +4,7 @@ import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
+import com.intellij.util.containers.HashMap;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,8 +18,18 @@ public class ConfigProvider implements PersistentStateComponent<ConfigProvider> 
 
     String serverUrl;
     Boolean notifications;
+    HashMap<String, Boolean> notificationStatus;
 
     public ConfigProvider() {
+        notificationStatus = new HashMap<String, Boolean>();
+    }
+
+    public HashMap<String, Boolean> getNotificationStatus() {
+        return notificationStatus;
+    }
+
+    public void setNotificationStatus(HashMap<String, Boolean> notificationStatus) {
+        this.notificationStatus = notificationStatus;
     }
 
     public String getServerUrl() {

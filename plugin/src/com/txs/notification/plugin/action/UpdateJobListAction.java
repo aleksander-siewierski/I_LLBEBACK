@@ -48,16 +48,18 @@ public class UpdateJobListAction extends TimerTask{
         try {
             DefaultMutableTreeNode root = new DefaultMutableTreeNode();
 
-
-
             String content = getUrlAsString(url+"/api/configuration/all/");
-            //noti.info(content);
+
             EntryNode[] myList = (EntryNode[]) json.fromJson(content, EntryNode[].class);
             for(int i = 0; i < myList.length; i++){
+                if(config.getNotificationStatus().get(myList[i].getId()) == null){
+                    config.getNotificationStatus().put(myList[i].getId(), true);
+                }
+                myList[i].setSelected(config.getNotificationStatus().get(myList[i].getId()));
                 ServerNode server = getServerNode(root, myList[i]);
                 server.add(myList[i]);
-                if (PropertiesComponent.getInstance().getBoolean("IWillBeBack.notifications")) {
-                    showNotification(myList[i]);
+                if (config.getNotifications()) {
+                    showNotification(myList[i], config.getNotificationStatus().get(myList[i].getId()));
                 }
             }
 
@@ -91,9 +93,6 @@ public class UpdateJobListAction extends TimerTask{
                 }
             }
         });
-
-
-
     }
 
     private ServerNode getServerNode(DefaultMutableTreeNode root, EntryNode entry){
@@ -111,8 +110,8 @@ public class UpdateJobListAction extends TimerTask{
         return server;
     }
 
-    private void showNotification(EntryNode listEntry) {
-        if (listEntry.getId() == null){
+    private void showNotification(EntryNode listEntry, boolean show) {
+        if (listEntry.getId() == null || !show){
             return;
         }
         if(statusMap.get(listEntry.getId()) == null){
