@@ -1,7 +1,7 @@
 <idea-plugin version="2">
   <id>com.txs.notification.plugin</id>
   <name>IWillBeBack</name>
-  <version>1.3</version>
+  <version>1.4</version>
   <vendor url="http://www.hrs.com">HRS</vendor>
 
   <description><![CDATA[
@@ -9,7 +9,7 @@
     ]]></description>
 
   <change-notes><![CDATA[
-      Finally working...
+      * Added enabling notifications for each job.
     ]]>
   </change-notes>
 
